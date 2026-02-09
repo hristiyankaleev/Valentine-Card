@@ -2,7 +2,7 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>За Маги</title>
     <style>
         :root {
@@ -20,89 +20,88 @@
             align-items: center;
             justify-content: center;
             background-color: var(--bg-pink);
-            /* Creating a pixelated heart-style pattern background */
-            background-image: radial-gradient(#ff66a1 20%, transparent 20%),
-                              radial-gradient(#ff66a1 20%, transparent 20%);
-            background-position: 0 0, 25px 25px;
-            background-size: 50px 50px;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-image: radial-gradient(rgba(255,255,255,0.2) 20%, transparent 20%);
+            background-size: 40px 40px;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
             text-align: center;
             color: var(--text-white);
         }
 
         .container {
+            width: 100%;
+            max-width: 400px;
             z-index: 10;
-            padding: 20px;
         }
 
         h2 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 400;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
+        /* Forced into two lines */
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 40px;
-            line-height: 1.2;
-            padding: 0 10px;
-        }
-
-        .buttons {
+            margin-bottom: 30px;
+            padding: 0 20px;
             display: flex;
             flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Horizontal button layout */
+        .btn-wrapper {
+            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             position: relative;
-            width: 100%;
-            height: 150px;
+            min-height: 60px;
         }
 
         .btn {
-            padding: 15px 40px;
-            border-radius: 15px;
+            padding: 12px 25px;
+            border-radius: 12px;
             border: 2px solid #333;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
-            text-decoration: none;
-            display: inline-block;
+            white-space: nowrap;
+            touch-action: manipulation;
         }
 
         #yes-btn {
             background-color: white;
             color: var(--bg-pink);
-            z-index: 10;
         }
 
         #no-btn {
             background-color: var(--btn-pink);
             color: #4a1529;
-            position: absolute;
-            transition: all 0.2s ease;
+            position: relative; /* Starts next to the Yes button */
+            transition: all 0.15s ease;
         }
 
-        /* Success State */
-        .success-message {
+        /* Success Message - Forced one line */
+        #success {
             display: none;
-            font-size: 3rem;
+            font-size: 1.8rem;
             font-weight: 900;
-            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pop 0.4s ease-out;
         }
 
         @keyframes pop {
-            0% { transform: scale(0.5); }
-            100% { transform: scale(1); }
-        }
-
-        @media (min-width: 600px) {
-            h1 { font-size: 3.5rem; }
-            .buttons { flex-direction: row; justify-content: center; height: auto; }
-            #no-btn { position: relative; }
+            0% { transform: translate(-50%, -50%) scale(0.5); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
     </style>
 </head>
@@ -110,38 +109,38 @@
 
     <div class="container" id="main-content">
         <h2>Здравей, Маги</h2>
-        <h1>ЩЕ МИ БЪДЕШ ЛИ<br>ВАЛЕНТИНКА?</h1>
+        <h1>
+            <span>ЩЕ МИ БЪДЕШ ЛИ</span>
+            <span>ВАЛЕНТИНКА?</span>
+        </h1>
         
-        <div class="buttons">
+        <div class="btn-wrapper">
             <button class="btn" id="yes-btn" onclick="celebrate()">ДА, РАЗБИРА СЕ</button>
-            <button class="btn" id="no-btn" onmouseover="moveButton()" onclick="moveButton()">НЕ</button>
+            <button class="btn" id="no-btn" onmouseover="moveButton()" ontouchstart="moveButton()">НЕ</button>
         </div>
     </div>
 
-    <div class="success-message" id="success">
-        ПРАВИЛЕН ОТГОВОР! ❤️
-    </div>
+    <div id="success">ПРАВИЛЕН ОТГОВОР! ❤️</div>
 
     <script>
         function moveButton() {
             const btn = document.getElementById('no-btn');
             
-            // Calculate random positions
-            // Ensure button stays within viewport bounds
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            // On first interaction, we switch it to absolute so it can jump anywhere
+            btn.style.position = 'fixed';
             
-            btn.style.position = 'absolute';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
+            // Restricted movement area to keep it on screen
+            const padding = 50;
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - padding);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - padding);
+            
+            btn.style.left = Math.max(padding, x) + 'px';
+            btn.style.top = Math.max(padding, y) + 'px';
         }
 
         function celebrate() {
             document.getElementById('main-content').style.display = 'none';
-            const success = document.getElementById('success');
-            success.style.display = 'block';
-            
-            // Optional: Launch some confetti or extra hearts
+            document.getElementById('success').style.display = 'block';
             setInterval(createHeart, 300);
         }
 
@@ -153,7 +152,6 @@
             heart.style.top = '100vh';
             heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
             heart.style.transition = 'transform 3s linear, opacity 3s';
-            heart.style.zIndex = '1';
             document.body.appendChild(heart);
 
             setTimeout(() => {
@@ -161,9 +159,7 @@
                 heart.style.opacity = '0';
             }, 100);
 
-            setTimeout(() => {
-                heart.remove();
-            }, 3000);
+            setTimeout(() => heart.remove(), 3000);
         }
     </script>
 </body>
