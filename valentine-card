@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>За Маги</title>
+    <style>
+        :root {
+            --bg-pink: #ff4d8d;
+            --btn-pink: #ff75a7;
+            --text-white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-pink);
+            /* Creating a pixelated heart-style pattern background */
+            background-image: radial-gradient(#ff66a1 20%, transparent 20%),
+                              radial-gradient(#ff66a1 20%, transparent 20%);
+            background-position: 0 0, 25px 25px;
+            background-size: 50px 50px;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            text-align: center;
+            color: var(--text-white);
+        }
+
+        .container {
+            z-index: 10;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            line-height: 1.2;
+            padding: 0 10px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            width: 100%;
+            height: 150px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        #yes-btn {
+            background-color: white;
+            color: var(--bg-pink);
+            z-index: 10;
+        }
+
+        #no-btn {
+            background-color: var(--btn-pink);
+            color: #4a1529;
+            position: absolute;
+            transition: all 0.2s ease;
+        }
+
+        /* Success State */
+        .success-message {
+            display: none;
+            font-size: 3rem;
+            font-weight: 900;
+            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); }
+            100% { transform: scale(1); }
+        }
+
+        @media (min-width: 600px) {
+            h1 { font-size: 3.5rem; }
+            .buttons { flex-direction: row; justify-content: center; height: auto; }
+            #no-btn { position: relative; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-content">
+        <h2>Здравей, Маги</h2>
+        <h1>ЩЕ МИ БЪДЕШ ЛИ<br>ВАЛЕНТИНКА?</h1>
+        
+        <div class="buttons">
+            <button class="btn" id="yes-btn" onclick="celebrate()">ДА, РАЗБИРА СЕ</button>
+            <button class="btn" id="no-btn" onmouseover="moveButton()" onclick="moveButton()">НЕ</button>
+        </div>
+    </div>
+
+    <div class="success-message" id="success">
+        ПРАВИЛЕН ОТГОВОР! ❤️
+    </div>
+
+    <script>
+        function moveButton() {
+            const btn = document.getElementById('no-btn');
+            
+            // Calculate random positions
+            // Ensure button stays within viewport bounds
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            btn.style.position = 'absolute';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function celebrate() {
+            document.getElementById('main-content').style.display = 'none';
+            const success = document.getElementById('success');
+            success.style.display = 'block';
+            
+            // Optional: Launch some confetti or extra hearts
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            heart.style.transition = 'transform 3s linear, opacity 3s';
+            heart.style.zIndex = '1';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
